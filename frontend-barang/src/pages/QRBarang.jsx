@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 export default function QRBarang() {
   const { id } = useParams();
-  const navigate = useNavigate(); // 🔥 tambah ini
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [qr, setQr] = useState("");
 
@@ -16,38 +16,69 @@ export default function QRBarang() {
       });
   }, [id]);
 
-  // 🔥 function kembali
   const handleBack = () => {
-    navigate("/"); // balik ke dashboard
+    navigate("/");
   };
 
-  if (!data) return <p className="text-center mt-10">Loading...</p>;
+  if (!data)
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-xl rounded-2xl p-6 w-[350px] text-center">
-        {/* 🔥 BUTTON KEMBALI */}
+    <div className="min-h-screen bg-gray-100">
+      {/* 🔥 NAVBAR */}
+      <div className="bg-[#0f172a] text-white px-8 py-4 flex justify-between items-center shadow">
+        <h1 className="text-lg font-semibold">📦 Alam Jaya Tekstil</h1>
+
         <button
-          onClick={handleBack}
-          className="mb-4 px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+          onClick={() => navigate("/")}
+          className="px-4 py-1.5 rounded-md text-sm bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90"
         >
-          ← Kembali
+          Dashboard
         </button>
+      </div>
 
-        <h1 className="text-xl font-bold mb-4">QR Barang</h1>
+      {/* 🔥 CONTENT */}
+      <div className="flex items-center justify-center p-10">
+        <div className="bg-white rounded-2xl shadow-md p-8 w-[400px] text-center">
+          {/* BACK BUTTON */}
+          <button
+            onClick={handleBack}
+            className="mb-6 text-sm text-gray-500 hover:text-black"
+          >
+            ← Kembali
+          </button>
 
-        <img src={qr} alt="QR Code" className="mx-auto mb-4" />
+          <h1 className="text-xl font-semibold text-gray-800 mb-6">
+            QR Code Barang
+          </h1>
 
-        <div className="text-left space-y-2">
-          <p>
-            <b>Nama:</b> {data.nama_barang}
-          </p>
-          <p>
-            <b>Kode:</b> {data.kode_barang}
-          </p>
-          <p>
-            <b>Jumlah:</b> {data.jumlah}
-          </p>
+          {/* QR */}
+          <div className="flex justify-center mb-6">
+            <img
+              src={qr}
+              alt="QR Code"
+              className="w-[220px] border p-2 rounded-lg"
+            />
+          </div>
+
+          {/* DETAIL */}
+          <div className="text-left space-y-3 border-t pt-4">
+            <p className="text-gray-700">
+              <span className="font-medium">Nama:</span> {data.nama_barang}
+            </p>
+
+            <p className="text-gray-700">
+              <span className="font-medium">Kode:</span> {data.kode_barang}
+            </p>
+
+            <p className="text-gray-700">
+              <span className="font-medium">Jumlah:</span> {data.jumlah}
+            </p>
+          </div>
         </div>
       </div>
     </div>

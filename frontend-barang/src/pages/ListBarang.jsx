@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 export default function ListBarang() {
   const [barang, setBarang] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    // 🔥 CEK LOGIN
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -20,7 +20,6 @@ export default function ListBarang() {
       });
   }, []);
 
-  // 🔥 DELETE
   const handleDelete = (id) => {
     const confirmDelete = window.confirm("Yakin mau hapus data ini?");
     if (!confirmDelete) return;
@@ -30,12 +29,11 @@ export default function ListBarang() {
     })
       .then(() => {
         alert("Data berhasil dihapus");
-        setBarang(barang.filter((item) => item.id !== id)); // langsung update UI
+        setBarang(barang.filter((item) => item.id !== id));
       })
       .catch(() => alert("Gagal hapus data"));
   };
 
-  // 🔥 LOGOUT
   const handleLogout = () => {
     const confirmLogout = window.confirm("Yakin mau logout?");
     if (!confirmLogout) return;
@@ -46,78 +44,93 @@ export default function ListBarang() {
     window.location.href = "/login";
   };
 
+  const filteredBarang = barang.filter((item) =>
+    item.nama_barang.toLowerCase().includes(search.toLowerCase()),
+  );
+
   return (
-    <div style={{ padding: "20px" }}>
-      {/* 🔥 HEADER + LOGOUT */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <h1>Dashboard Barang</h1>
+    <div className="min-h-screen bg-gray-100">
+      {/* 🔥 NAVBAR (SELARAS LOGIN) */}
+      <div className="bg-[#0f172a] text-white px-8 py-4 flex justify-between items-center shadow">
+        <h1 className="text-lg font-semibold">📦 Alam Jaya Tekstil</h1>
 
         <button
           onClick={handleLogout}
-          style={{
-            backgroundColor: "red",
-            color: "white",
-            padding: "8px 12px",
-            border: "none",
-            cursor: "pointer",
-          }}
+          className="px-4 py-1.5 rounded-md text-sm font-medium bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90"
         >
           Logout
         </button>
       </div>
 
-      <button
-        onClick={() => (window.location.href = "/tambah")}
-        style={{ marginBottom: "10px" }}
-      >
-        + Tambah Barang
-      </button>
+      {/* 🔥 HEADER */}
+      <div className="bg-white px-8 py-6 border-b">
+        <div className="flex justify-between items-center flex-wrap gap-4">
+          {/* 🔥 BUTTON SESUAI LOGIN */}
+          <button
+            onClick={() => (window.location.href = "/tambah")}
+            className="text-white px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90"
+          >
+            + Tambah Barang
+          </button>
 
-      <table border="1" cellPadding="10" style={{ width: "100%" }}>
-        <thead>
-          <tr>
-            <th>Nama</th>
-            <th>Kode</th>
-            <th>Jumlah</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
+          <input
+            type="text"
+            placeholder="Cari barang..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
+          />
+        </div>
+      </div>
 
-        <tbody>
-          {barang.map((item) => (
-            <tr key={item.id}>
-              <td>{item.nama_barang}</td>
-              <td>{item.kode_barang}</td>
-              <td>{item.jumlah}</td>
-              <td>
-                {/* QR */}
+      {/* 🔥 CONTENT */}
+      <div className="p-8">
+        <div className="grid md:grid-cols-3 gap-6">
+          {filteredBarang.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white border rounded-xl p-5 shadow-sm hover:shadow-md transition"
+            >
+              <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                {item.nama_barang}
+              </h2>
+
+              <p className="text-sm text-gray-500">Kode: {item.kode_barang}</p>
+
+              <p className="text-sm text-gray-500 mb-4">
+                Jumlah: {item.jumlah}
+              </p>
+
+              <div className="flex gap-2 flex-wrap">
                 <Link to={`/qr/${item.id}`}>
-                  <button>Lihat QR</button>
+                  <button className="bg-indigo-500 text-white px-3 py-1 rounded text-sm">
+                    QR
+                  </button>
                 </Link>
 
-                {/* EDIT */}
                 <Link to={`/edit/${item.id}`}>
-                  <button style={{ marginLeft: "5px" }}>Edit</button>
+                  <button className="bg-yellow-400 px-3 py-1 rounded text-sm">
+                    Edit
+                  </button>
                 </Link>
 
-                {/* DELETE */}
                 <button
                   onClick={() => handleDelete(item.id)}
-                  style={{ marginLeft: "5px", color: "red" }}
+                  className="bg-red-500 text-white px-3 py-1 rounded text-sm"
                 >
                   Hapus
                 </button>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+
+        {filteredBarang.length === 0 && (
+          <p className="text-center mt-10 text-gray-400">
+            Data tidak ditemukan
+          </p>
+        )}
+      </div>
     </div>
   );
 }
