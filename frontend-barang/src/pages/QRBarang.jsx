@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function QRBarang() {
   const { id } = useParams();
+  const navigate = useNavigate(); // 🔥 tambah ini
   const [data, setData] = useState(null);
   const [qr, setQr] = useState("");
 
@@ -15,11 +16,24 @@ export default function QRBarang() {
       });
   }, [id]);
 
+  // 🔥 function kembali
+  const handleBack = () => {
+    navigate("/"); // balik ke dashboard
+  };
+
   if (!data) return <p className="text-center mt-10">Loading...</p>;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white shadow-xl rounded-2xl p-6 w-[350px] text-center">
+        {/* 🔥 BUTTON KEMBALI */}
+        <button
+          onClick={handleBack}
+          className="mb-4 px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          ← Kembali
+        </button>
+
         <h1 className="text-xl font-bold mb-4">QR Barang</h1>
 
         <img src={qr} alt="QR Code" className="mx-auto mb-4" />

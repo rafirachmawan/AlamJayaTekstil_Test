@@ -25,6 +25,9 @@ export default function Login() {
         // simpan user
         localStorage.setItem("user", JSON.stringify(data.user));
 
+        // 🔥 TAMBAH INI
+        localStorage.setItem("token", data.token);
+
         alert("Login berhasil");
 
         // redirect ke dashboard

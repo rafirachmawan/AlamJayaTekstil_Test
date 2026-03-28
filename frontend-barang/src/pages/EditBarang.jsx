@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function EditBarang() {
   const { id } = useParams();
+  const navigate = useNavigate(); // 🔥 tambah ini
 
   const [form, setForm] = useState({
     nama_barang: "",
@@ -44,8 +45,25 @@ export default function EditBarang() {
       .catch(() => alert("Error update"));
   };
 
+  // 🔥 function kembali
+  const handleBack = () => {
+    navigate(-1); // lebih fleksibel (balik ke halaman sebelumnya)
+  };
+
   return (
     <div style={{ padding: "20px" }}>
+      {/* 🔥 BUTTON KEMBALI */}
+      <button
+        onClick={handleBack}
+        style={{
+          marginBottom: "10px",
+          padding: "6px 10px",
+          cursor: "pointer",
+        }}
+      >
+        ← Kembali
+      </button>
+
       <h1>Edit Barang</h1>
 
       <form onSubmit={handleSubmit}>

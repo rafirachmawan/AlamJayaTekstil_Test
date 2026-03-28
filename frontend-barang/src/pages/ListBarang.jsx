@@ -5,6 +5,14 @@ export default function ListBarang() {
   const [barang, setBarang] = useState([]);
 
   useEffect(() => {
+    // 🔥 CEK LOGIN
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "/login";
+      return;
+    }
+
     fetch("http://localhost:8080/api/barang")
       .then((res) => res.json())
       .then((res) => {
@@ -27,9 +35,42 @@ export default function ListBarang() {
       .catch(() => alert("Gagal hapus data"));
   };
 
+  // 🔥 LOGOUT
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("Yakin mau logout?");
+    if (!confirmLogout) return;
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.href = "/login";
+  };
+
   return (
     <div style={{ padding: "20px" }}>
-      <h1>Dashboard Barang</h1>
+      {/* 🔥 HEADER + LOGOUT */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>Dashboard Barang</h1>
+
+        <button
+          onClick={handleLogout}
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            padding: "8px 12px",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          Logout
+        </button>
+      </div>
 
       <button
         onClick={() => (window.location.href = "/tambah")}
