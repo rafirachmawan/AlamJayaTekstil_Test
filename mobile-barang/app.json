@@ -7,10 +7,14 @@
     "icon": "./assets/images/icon.png",
     "scheme": "mobilebarang",
     "userInterfaceStyle": "automatic",
+
     "ios": {
+      "bundleIdentifier": "com.rafi.mobilebarang",
       "icon": "./assets/expo.icon"
     },
+
     "android": {
+      "package": "com.rafi.mobilebarang",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -19,10 +23,12 @@
       },
       "predictiveBackGestureEnabled": false
     },
+
     "web": {
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
+
     "plugins": [
       "expo-router",
       [
@@ -34,8 +40,10 @@
             "imageWidth": 76
           }
         }
-      ]
+      ],
+      "expo-barcode-scanner"
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
