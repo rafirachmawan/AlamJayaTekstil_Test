@@ -8,4 +8,10 @@ class Home extends BaseController
     {
         return view('welcome_message');
     }
+
+    // 🔥 TAMBAHKAN INI
+    public function hash()
+    {
+        echo password_hash("123456", PASSWORD_DEFAULT);
+    }
 }

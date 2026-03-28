@@ -7,10 +7,13 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+// 🔥 TAMBAHKAN INI
+$routes->get('hash', 'Home::hash');
+
 // API BARANG
 $routes->group('api', function($routes) {
 
-    // 🔥 WAJIB: HANDLE PREFLIGHT (INI YANG KURANG)
+    // 🔥 PREFLIGHT (SUDAH BENAR)
     $routes->options('(:any)', function () {
         return response()->setStatusCode(200);
     });
@@ -22,4 +25,6 @@ $routes->group('api', function($routes) {
 
     // QR CODE
     $routes->get('barang/qr/(:num)', 'Api\Barang::qr/$1');
+
+   $routes->post('login', 'Api\Auth::login');
 });
