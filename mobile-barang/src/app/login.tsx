@@ -4,19 +4,30 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import { API } from "@/config/api";
 
 export default function Login() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    // 🔥 VALIDASI
+    if (!email || !password) {
+      alert("Email dan password wajib diisi");
+      return;
+    }
+
     try {
-      const res = await fetch("http://192.168.1.55:8080/api/login", {
+      setLoading(true);
+
+      const res = await fetch(API.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,18 +40,21 @@ export default function Login() {
 
       const data = await res.json();
 
-      console.log("RES:", data); // 🔥 debug
+      console.log("RES:", data);
 
       if (data.status === "success") {
         alert("Login berhasil");
 
+        // 🔥 nanti bisa simpan user ke AsyncStorage
         router.replace("/list");
       } else {
-        alert(data.message);
+        alert(data.message || "Login gagal");
       }
     } catch (error) {
       console.log(error);
       alert("Gagal koneksi ke server");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,6 +65,7 @@ export default function Login() {
       <TextInput
         placeholder="Email"
         style={styles.input}
+        value={email}
         onChangeText={setEmail}
       />
 
@@ -58,11 +73,20 @@ export default function Login() {
         placeholder="Password"
         secureTextEntry
         style={styles.input}
+        value={password}
         onChangeText={setPassword}
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.text}>Login</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={handleLogin}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.text}>Login</Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -70,7 +94,12 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: "center", padding: 20 },
-  title: { fontSize: 22, marginBottom: 20, textAlign: "center" },
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
   input: {
     borderWidth: 1,
     padding: 12,
@@ -82,5 +111,9 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
   },
-  text: { color: "#fff", textAlign: "center" },
+  text: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
 });

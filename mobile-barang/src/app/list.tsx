@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
+import { API } from "@/config/api";
 
 export default function List() {
   const [data, setData] = useState<any[]>([]);
@@ -15,10 +16,8 @@ export default function List() {
 
   const getData = async () => {
     try {
-      const res = await fetch("http://192.168.1.55:8080/api/barang");
+      const res = await fetch(API.barang);
       const json = await res.json();
-
-      console.log("DATA:", json);
 
       setData(json.data);
     } catch (error) {
@@ -29,9 +28,15 @@ export default function List() {
     }
   };
 
+  //
   useEffect(() => {
     getData();
   }, []);
+
+  //
+  useFocusEffect(() => {
+    getData();
+  });
 
   const handleLogout = () => {
     router.replace("/login");
@@ -55,7 +60,7 @@ export default function List() {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* 🔥 HEADER */}
+      {/* HEADER */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Data Barang</Text>
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
@@ -63,12 +68,36 @@ export default function List() {
         </TouchableOpacity>
       </View>
 
-      {/* 🔥 LIST */}
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-      />
+      {/* BUTTON TAMBAH */}
+      <TouchableOpacity
+        style={styles.addBtn}
+        onPress={() => router.push("/add")}
+      >
+        <Text style={styles.addText}>+ Tambah Barang</Text>
+      </TouchableOpacity>
+
+      {/* BUTTON SCAN */}
+      <TouchableOpacity
+        style={styles.scanBtn}
+        onPress={() => router.push("/scan")}
+      >
+        <Text style={styles.scanText}>📷 Scan Barang</Text>
+      </TouchableOpacity>
+
+      {/* LIST */}
+      {data.length === 0 ? (
+        <View style={styles.center}>
+          <Text>Data kosong</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          keyExtractor={(item, index) =>
+            item.id?.toString() || index.toString()
+          }
+          renderItem={renderItem}
+        />
+      )}
     </View>
   );
 }
@@ -96,6 +125,32 @@ const styles = StyleSheet.create({
     color: "#4CAF50",
     fontWeight: "bold",
   },
+
+  addBtn: {
+    backgroundColor: "#2196F3",
+    padding: 12,
+    margin: 10,
+    borderRadius: 10,
+  },
+  addText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+
+  scanBtn: {
+    backgroundColor: "#FF9800",
+    padding: 12,
+    marginHorizontal: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+  },
+  scanText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+
   card: {
     padding: 15,
     margin: 10,
