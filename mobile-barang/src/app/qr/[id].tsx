@@ -24,7 +24,11 @@ export default function QRBarang() {
       .then((res) => res.json())
       .then((res) => {
         setData(res.data);
-        setQr(res.qr);
+        setQr(
+          res.qr.startsWith("data:image")
+            ? res.qr
+            : `data:image/png;base64,${res.qr}`,
+        );
       })
       .catch((err) => {
         console.log(err);
