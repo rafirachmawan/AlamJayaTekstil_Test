@@ -180,15 +180,33 @@ export default function List() {
               <Text style={styles.text}>Kode: {item.kode_barang}</Text>
               <Text style={styles.text}>Jumlah: {item.jumlah}</Text>
 
-              {/* 🔥 DELETE BUTTON */}
-              <TouchableOpacity
-                onPress={() => handleDelete(item.id)}
-                style={{ marginTop: 10 }}
+              {/* 🔥 ACTION BUTTON */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 10,
+                }}
               >
-                <Text style={{ color: "#f87171", textAlign: "right" }}>
-                  Hapus
-                </Text>
-              </TouchableOpacity>
+                {/* QR BUTTON */}
+                <TouchableOpacity
+                  onPress={() =>
+                    router.push({
+                      pathname: "/qr/[id]",
+                      params: { id: item.id },
+                    })
+                  }
+                >
+                  <Text style={{ color: "#a855f7", fontWeight: "600" }}>
+                    Lihat QR
+                  </Text>
+                </TouchableOpacity>
+
+                {/* DELETE BUTTON */}
+                <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                  <Text style={{ color: "#f87171" }}>Hapus</Text>
+                </TouchableOpacity>
+              </View>
             </>
           )}
         </View>
