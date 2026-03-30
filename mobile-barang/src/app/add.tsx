@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { API } from "@/config/api";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Add() {
   const router = useRouter();
@@ -19,7 +20,6 @@ export default function Add() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    // 🔥 VALIDASI
     if (!nama || !kode || !jumlah) {
       alert("Semua field wajib diisi");
       return;
@@ -45,7 +45,6 @@ export default function Add() {
       if (json.status === "success") {
         alert("Berhasil tambah barang");
 
-        // reset form
         setNama("");
         setKode("");
         setJumlah("");
@@ -64,79 +63,138 @@ export default function Add() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tambah Barang</Text>
+      {/* BACKGROUND GLOW */}
+      <View style={styles.bgPurple} />
+      <View style={styles.bgPink} />
 
-      <TextInput
-        placeholder="Nama Barang"
-        style={styles.input}
-        value={nama}
-        onChangeText={setNama}
-      />
+      {/* CARD */}
+      <View style={styles.card}>
+        <Text style={styles.title}>Tambah Barang</Text>
 
-      <TextInput
-        placeholder="Kode Barang"
-        style={styles.input}
-        value={kode}
-        onChangeText={setKode}
-      />
+        {/* INPUT */}
+        <TextInput
+          placeholder="Nama Barang"
+          placeholderTextColor="#94a3b8"
+          style={styles.input}
+          value={nama}
+          onChangeText={setNama}
+        />
 
-      <TextInput
-        placeholder="Jumlah"
-        style={styles.input}
-        value={jumlah}
-        keyboardType="numeric"
-        onChangeText={setJumlah}
-      />
+        <TextInput
+          placeholder="Kode Barang"
+          placeholderTextColor="#94a3b8"
+          style={styles.input}
+          value={kode}
+          onChangeText={setKode}
+        />
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleSubmit}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.text}>Simpan</Text>
-        )}
-      </TouchableOpacity>
+        <TextInput
+          placeholder="Jumlah"
+          placeholderTextColor="#94a3b8"
+          style={styles.input}
+          value={jumlah}
+          keyboardType="numeric"
+          onChangeText={setJumlah}
+        />
 
-      {/* 🔙 BACK */}
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.back}>← Kembali</Text>
-      </TouchableOpacity>
+        {/* BUTTON */}
+        <TouchableOpacity
+          onPress={handleSubmit}
+          disabled={loading}
+          style={{ width: "100%", marginTop: 10 }}
+        >
+          <LinearGradient colors={["#a855f7", "#ec4899"]} style={styles.button}>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Simpan</Text>
+            )}
+          </LinearGradient>
+        </TouchableOpacity>
+
+        {/* BACK */}
+        <TouchableOpacity onPress={() => router.back()}>
+          <Text style={styles.back}>← Kembali</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: "#0f172a",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  // 🔥 BACKGROUND GLOW
+  bgPurple: {
+    position: "absolute",
+    width: 300,
+    height: 300,
+    backgroundColor: "#a855f7",
+    opacity: 0.2,
+    borderRadius: 999,
+    top: 50,
+    left: 20,
+  },
+  bgPink: {
+    position: "absolute",
+    width: 300,
+    height: 300,
+    backgroundColor: "#ec4899",
+    opacity: 0.2,
+    borderRadius: 999,
+    bottom: 50,
+    right: 20,
+  },
+
+  // 🔥 CARD
+  card: {
+    width: "85%",
+    padding: 24,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+  },
+
   title: {
     fontSize: 20,
-    marginBottom: 20,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  input: {
-    borderWidth: 1,
-    marginBottom: 10,
-    padding: 12,
-    borderRadius: 8,
-  },
-  button: {
-    backgroundColor: "#4CAF50",
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  text: {
     color: "#fff",
     textAlign: "center",
-    fontWeight: "bold",
+    marginBottom: 20,
+    fontWeight: "600",
   },
+
+  input: {
+    width: "100%",
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+    color: "#fff",
+    marginBottom: 12,
+  },
+
+  button: {
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+  },
+
   back: {
     marginTop: 15,
     textAlign: "center",
-    color: "#2196F3",
-    fontWeight: "bold",
+    color: "#cbd5f5",
+    fontWeight: "500",
   },
 });

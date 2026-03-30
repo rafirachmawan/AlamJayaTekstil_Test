@@ -3,6 +3,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { API } from "@/config/api";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Scan() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -12,17 +13,14 @@ export default function Scan() {
 
   const router = useRouter();
 
-  // 🔥 HANDLE SCAN
   const handleScan = async ({ data }: any) => {
     setScanned(true);
     setResult(data);
 
     try {
-      // 🔥 HIT API (cari barang berdasarkan kode)
       const res = await fetch(`${API.barang}`);
       const json = await res.json();
 
-      // 🔥 cari barang berdasarkan kode
       const found = json.data.find((item: any) => item.kode_barang == data);
 
       if (found) {
@@ -38,22 +36,35 @@ export default function Scan() {
 
   // 🔥 PERMISSION
   if (!permission) {
-    return <Text>Meminta izin kamera...</Text>;
+    return (
+      <View style={styles.center}>
+        <Text style={{ color: "#fff" }}>Meminta izin kamera...</Text>
+      </View>
+    );
   }
 
   if (!permission.granted) {
     return (
-      <View style={styles.center}>
-        <Text>Tidak ada akses kamera</Text>
+      <View style={[styles.center, { backgroundColor: "#0f172a" }]}>
+        <Text style={{ color: "#fff" }}>Tidak ada akses kamera</Text>
+
         <TouchableOpacity onPress={requestPermission}>
-          <Text style={{ color: "blue", marginTop: 10 }}>Izinkan Kamera</Text>
+          <LinearGradient
+            colors={["#a855f7", "#ec4899"]}
+            style={styles.permissionBtn}
+          >
+            <Text style={{ color: "#fff", fontWeight: "600" }}>
+              Izinkan Kamera
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
+      {/* CAMERA */}
       <CameraView
         style={StyleSheet.absoluteFillObject}
         barcodeScannerSettings={{
@@ -62,9 +73,17 @@ export default function Scan() {
         onBarcodeScanned={scanned ? undefined : handleScan}
       />
 
-      {/* 🔥 HASIL SCAN */}
+      {/* 🔥 OVERLAY DARK */}
+      <View style={styles.overlay} />
+
+      {/* 🔥 FRAME SCAN */}
+      <View style={styles.scanFrame} />
+
+      {/* 🔥 HASIL */}
       {scanned && (
         <View style={styles.resultBox}>
+          <Text style={styles.resultTitle}>Hasil Scan</Text>
+
           <Text style={styles.resultText}>Kode: {result}</Text>
 
           {barang && (
@@ -74,17 +93,25 @@ export default function Scan() {
             </>
           )}
 
+          {/* BUTTON SCAN LAGI */}
           <TouchableOpacity
             onPress={() => {
               setScanned(false);
               setBarang(null);
             }}
+            style={{ marginTop: 10 }}
           >
-            <Text style={styles.scanAgain}>Scan Lagi</Text>
+            <LinearGradient
+              colors={["#a855f7", "#ec4899"]}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>Scan Lagi</Text>
+            </LinearGradient>
           </TouchableOpacity>
 
+          {/* BACK */}
           <TouchableOpacity onPress={() => router.back()}>
-            <Text style={styles.back}>Kembali</Text>
+            <Text style={styles.back}>← Kembali</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -93,32 +120,76 @@ export default function Scan() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#000",
+  },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(15,23,42,0.4)",
+  },
+
+  scanFrame: {
+    position: "absolute",
+    top: "30%",
+    left: "15%",
+    width: "70%",
+    height: 200,
+    borderWidth: 2,
+    borderColor: "#a855f7",
+    borderRadius: 20,
+  },
+
   resultBox: {
     position: "absolute",
-    bottom: 50,
+    bottom: 40,
     left: 20,
     right: 20,
-    backgroundColor: "#000",
-    padding: 15,
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.2)",
+  },
+
+  resultTitle: {
+    color: "#fff",
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 10,
+    fontSize: 16,
+  },
+
+  resultText: {
+    color: "#cbd5f5",
+    textAlign: "center",
+    marginBottom: 4,
+  },
+
+  button: {
+    padding: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+
+  buttonText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+
+  back: {
+    marginTop: 10,
+    textAlign: "center",
+    color: "#94a3b8",
+  },
+
+  permissionBtn: {
+    marginTop: 15,
+    padding: 12,
     borderRadius: 10,
   },
-  resultText: {
-    color: "#fff",
-    textAlign: "center",
-    marginBottom: 5,
-  },
-  scanAgain: {
-    color: "#4CAF50",
-    textAlign: "center",
-    fontWeight: "bold",
-    marginTop: 10,
-  },
-  back: {
-    color: "#FF9800",
-    textAlign: "center",
-    fontWeight: "bold",
-    marginTop: 10,
-  },
+
   center: {
     flex: 1,
     justifyContent: "center",
