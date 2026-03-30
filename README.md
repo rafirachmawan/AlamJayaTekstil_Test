@@ -2,6 +2,9 @@
 
 # 📦 Sistem Manajemen Data Barang
 
+Username : admin@gmail.com
+pass : 123456
+
 Project ini terdiri dari:
 
 - 🌐 Web App (PHP CodeIgniter)
@@ -37,10 +40,12 @@ ngrok installer
 cd ci-barang
 php spark serve --host 0.0.0.0 --port 8080
 ```
+
 ```Local Web
 cd frontend-barang
 npm run dev
 ```
+
 ## 🌐 Akses di browser
 
 ```bash
@@ -78,12 +83,15 @@ src/config/api.ts
 ```ts
 export const BASE_URL = "https://xxxx.ngrok-free.dev";
 ```
----
-## Run di mobile / emulator 
-``Emulator``
-``cd mobile-barang npx expo start –tunnel --> s--> a ``
 
-``Mobile``
+---
+
+## Run di mobile / emulator
+
+`Emulator`
+`cd mobile-barang npx expo start –tunnel --> s--> a `
+
+`Mobile`
 ``cd mobile-barang npx expo start –tunnel --> s--> scan barcode yang muncul ( diwajibkan mempunyai aplikasi expo go )
 
 # 💻 3. SETUP WEB (CodeIgniter)
@@ -94,7 +102,6 @@ export const BASE_URL = "https://xxxx.ngrok-free.dev";
 - List barang
 - CRUD barang
 - Generate QR Code
-
 
 # 📱 4. SETUP MOBILE (React Native - Expo)
 
