@@ -20,25 +20,31 @@ Digunakan untuk mengelola data barang seperti:
 ## 📁 Masuk ke folder backend
 
 ```bash
-cd backend
+Run Xampp controller ( Apache, Mysql )
 ```
 
 ## 📦 Install dependency (jika ada)
 
 ```bash
 composer install
+npm install
+ngrok installer
 ```
 
-## ▶️ Jalankan server
+## ▶️ Jalankan Web
 
-```bash
+```Server ( Backend )
+cd ci-barang
 php spark serve --host 0.0.0.0 --port 8080
 ```
-
+```Local Web
+cd frontend-barang
+npm run dev
+```
 ## 🌐 Akses di browser
 
 ```bash
-http://localhost:8080
+http://localhost:5173/
 ```
 
 ---
@@ -58,7 +64,7 @@ ngrok http 8080
 Contoh:
 
 ```bash
-https://xxxx.ngrok-free.dev
+https://xxxx.ngrok-free.dev ( masukan di cd mobile-barang/src/config/api.ts )
 ```
 
 ## ⚙️ Set di mobile
@@ -72,8 +78,13 @@ src/config/api.ts
 ```ts
 export const BASE_URL = "https://xxxx.ngrok-free.dev";
 ```
-
 ---
+## Run di mobile / emulator 
+``Emulator``
+``cd mobile-barang npx expo start –tunnel --> s--> a ``
+
+``Mobile``
+``cd mobile-barang npx expo start –tunnel --> s--> scan barcode yang muncul ( diwajibkan mempunyai aplikasi expo go )
 
 # 💻 3. SETUP WEB (CodeIgniter)
 
@@ -84,13 +95,6 @@ export const BASE_URL = "https://xxxx.ngrok-free.dev";
 - CRUD barang
 - Generate QR Code
 
-## Cara akses:
-
-```bash
-http://localhost:8080
-```
-
----
 
 # 📱 4. SETUP MOBILE (React Native - Expo)
 
@@ -109,7 +113,7 @@ npm install
 ## ▶️ Jalankan project
 
 ```bash
-npx expo start
+npx expo start –tunnel
 ```
 
 ## 📲 Jalankan di HP
